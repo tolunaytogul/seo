@@ -1,0 +1,63 @@
+// Kategori sayfalarına özel JSON-LD script ekleyen fonksiyon
+function add_ld_json_script_to_category_pages() {
+    if (is_product_category()) {
+        global $wp_query;
+ 
+        // Ürünlerin bilgilerini almak
+        $products = $wp_query->posts;
+        // JSON-LD başlatma
+        $json_ld = '
+<script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": [';
+ 
+        // Ürünleri döngüye sokarak JSON-LD'yi oluşturma
+        $position = 1;
+        foreach ($products as $product) {
+            // Ürün bilgilerini çekmek için gerekli veriler
+            $product_url = get_permalink($product->ID);
+            $product_name = get_the_title($product->ID);
+            $product_image = wp_get_attachment_url( get_post_thumbnail_id($product->ID) );
+            $product_price = get_post_meta($product->ID, '_price', true);
+            $currency = get_woocommerce_currency();
+            $availability = 'http://schema.org/InStock';  // Stok durumu örneği
+ 
+            // JSON-LD'yi detaylandırma
+            $json_ld .= '
+            {
+                "@type": "ListItem",
+                "position": ' . $position . ',
+                "item": {
+                    "@type": "Product",
+                    "name": "' . esc_js($product_name) . '",
+                    "image": "' . esc_url($product_image) . '",
+                    "offers": {
+                        "@type": "Offer",
+                        "url": "' . esc_url($product_url) . '",
+                        "priceCurrency": "' . esc_js($currency) . '",
+                        "price": "' . esc_js($product_price) . '",
+                        "availability": "' . esc_js($availability) . '"
+                    }
+                }
+            },';
+            $position++;
+        }
+ 
+        // Son virgülü kaldırmak için son elemanı düzelt
+        $json_ld = rtrim($json_ld, ',');
+ 
+        // Kapanışlar
+        $json_ld .= '
+            ]
+        }
+</script>';
+ 
+        // Script'i bas
+        echo $json_ld;
+    }
+}
+ 
+// Bu fonksiyonu Woocommerce sayfalarında çağırma
+add_action('wp_footer', 'add_ld_json_script_to_category_pages');
