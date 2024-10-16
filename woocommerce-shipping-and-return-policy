@@ -1,0 +1,42 @@
+add_filter( "rank_math/snippet/rich_snippet_product_entity", function( $entity ) {
+    // Return Policy / İade politikaları
+    $entity['offers']['hasMerchantReturnPolicy']['@type'] = 'MerchantReturnPolicy';
+    $entity['offers']['hasMerchantReturnPolicy']['applicableCountry'] = 'TR';
+    $entity['offers']['hasMerchantReturnPolicy']['returnPolicyCategory'] = 'https://schema.org/MerchantReturnFiniteReturnWindow';
+    $entity['offers']['hasMerchantReturnPolicy']['merchantReturnDays'] = 14;
+    $entity['offers']['hasMerchantReturnPolicy']['returnMethod'] = [
+        'https://schema.org/ReturnAtKiosk',
+        'https://schema.org/ReturnInStore'
+    ];
+    $entity['offers']['hasMerchantReturnPolicy']['returnFees'] = 'https://schema.org/FreeReturn';
+
+    // Shipping Details / Kargo detayları
+    $entity['offers']['shippingDetails']['@type'] = 'OfferShippingDetails';
+    $entity['offers']['shippingDetails']['shippingRate']['@type'] = 'MonetaryAmount';
+    $entity['offers']['shippingDetails']['shippingRate']['value'] = 0; // Free shipping / Ücretsiz kargo
+    $entity['offers']['shippingDetails']['shippingRate']['currency'] = 'TRY';
+    $entity['offers']['shippingDetails']['shippingDestination']['@type'] = 'DefinedRegion';
+    $entity['offers']['shippingDetails']['shippingDestination']['addressCountry'] = 'TR';
+
+    // Delivery Time / Teslimat süreleri
+    $entity['offers']['shippingDetails']['deliveryTime']['@type'] = 'ShippingDeliveryTime';
+    $entity['offers']['shippingDetails']['deliveryTime']['handlingTime'] = [
+        '@type' => 'QuantitativeValue',
+        'minValue' => 2,
+        'maxValue' => 2,
+        'unitCode' => 'd' // Days / Gün birimi
+    ];
+    $entity['offers']['shippingDetails']['deliveryTime']['transitTime'] = [
+        '@type' => 'QuantitativeValue',
+        'minValue' => 2,
+        'maxValue' => 4,
+        'unitCode' => 'd' // Days / Gün birimi
+    ];
+
+    // Product Condition & Refund Processing Time / Ürün Durumu ve İade Süreleri
+    $entity['offers']['itemCondition'] = 'https://schema.org/NewCondition';
+    $entity['offers']['hasMerchantReturnPolicy']['refundProcessingTime'] = 'P7D'; // 7 days / 7 gün
+
+    return $entity;
+});
+?>
