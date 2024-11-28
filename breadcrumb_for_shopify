@@ -1,0 +1,100 @@
+<nav class="breadcrumbs" role="navigation" aria-label="breadcrumbs">
+<ol class="breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="/" itemprop="item">
+<span itemprop="name">Home</span>
+</a>
+<meta itemprop="position" content="1" />
+</li>
+{%- case t -%}
+{%- when 'page' -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ page.url }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ page.title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+{%- when 'product' -%}
+{%- if product.collections.first -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ product.collections.first.url }}" itemprop="item">
+<span itemprop="name">{{ product.collections.first.title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+{%- endif -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ product.url }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ product.title }}</span>
+</a>
+<meta itemprop="position" content="3" />
+</li>
+{%- when 'collection' and collection.handle -%}
+{%- if current_tags -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ collection.url }}" itemprop="item">
+<span itemprop="name">{{ collection.title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+{%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+<a class="breadcrumbs__link" href="{{ tag_url }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ current_tags | join: " + "}}</span>
+</a>
+<meta itemprop="position" content="3" />
+</li>
+{%- else -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ collection.url }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ collection.title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+{%- endif -%}
+{%- when 'blog' -%}
+{%- if current_tags -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ blog.url }}" itemprop="item">
+<span itemprop="name">{{ blog.title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+{%- capture tag_url -%}{{ blog.url }}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+<a class="breadcrumbs__link" href="{{ tag_url }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ current_tags | join: " + " }}</span>
+</a>
+<meta itemprop="position" content="3" />
+</li>
+{%- else -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ blog.url }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ blog.title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+{%- endif -%}
+{%- when 'article' -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ blog.url }}" itemprop="item">
+<span itemprop="name">{{ blog.title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ article.url }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ article.title }}</span>
+</a>
+<meta itemprop="position" content="3" />
+</li>
+{%- else -%}
+<li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<a class="breadcrumbs__link" href="{{ request.path }}" aria-current="page" itemprop="item">
+<span itemprop="name">{{ page_title }}</span>
+</a>
+<meta itemprop="position" content="2" />
+</li>
+{%- endcase -%}
+</ol>
+</nav>
