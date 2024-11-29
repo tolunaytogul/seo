@@ -1,0 +1,12 @@
+function remove_below_woocommerce_category_on_paged_urls() {
+    if (is_paged()) { // Eğer /page/ içeren bir URL ise
+        ?>
+<style>
+            .below-woocommerce-category {
+                display: none !important;
+            }
+</style>
+<?php
+    }
+}
+add_action('wp_head', 'remove_below_woocommerce_category_on_paged_urls');
